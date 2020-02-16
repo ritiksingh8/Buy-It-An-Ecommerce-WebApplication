@@ -34,10 +34,7 @@
 		        <a class="nav-link" href="{% url 'about'%}">About</a>
 		      </li>
 		      <li class="nav-item">
-		        <button type="button" id="cart" data-html="true" class="btn btn-secondary" data-container="body" data-toggle="popover" data-placement="bottom" data-content="Vivamus
-				sagittis lacus vel augue laoreet rutrum faucibus.">
-				  Cart
-				</button>
+		        <a class="nav-link" href="{% url 'cart' view products%}">Cart <span class="sr-only">(current)</span></a>
 		      </li>
 		      
 		    </ul>
@@ -83,7 +80,7 @@
 						</div>
 
 						<a href="{% url 'product-detail' product.id %}" class="btn btn-warning">View</a>
-						<button id="{{ product.id }}" class="btn atc btn-warning">Add to Cart</button>
+						<a href="{% url 'cart' add product.title %}"><button id="{{ product.id }}" class="btn atc btn-warning">Add to Cart</button></a>
 					</div>
 				</div>
 			</div>		
@@ -116,56 +113,4 @@
 	</div>	
 
 </body>
-
-<script type="text/javascript">
-	
-	if(localStorage.getItem('cart')==null){
-		var cart={};
-	}
-	else{
-		cart=JSON.parse(localStorage.getItem('cart'));
-	}
-
-	$(document).on('click','.atc',function(){
-		console.log("The add to cart button is clicked");
-		var item_id=this.id.toString();
-		console.log(item_id);
-
-		if(cart[item_id]!=undefined){
-			quantity = cart[item_id][0] + 1;
-			cart[item_id][0] = quantity;
-			cart[item_id][2] += parseFloat(document.getElementById("price"+item_id).innerHTML)
-		}
-		else
-		{
-			quantity = 1;
-			name=document.getElementById("title"+item_id).innerHTML
-			price=parseFloat(document.getElementById("price"+item_id).innerHTML)
-			cart[item_id] = [quantity,name,price];
-		}
-		console.log(cart);
-		localStorage.setItem('cart',JSON.stringify(cart));
-		document.getElementById("cart").innerHTML="Cart("+Object.keys(cart).length+")";
-	});
-
-
-	DisplayCart(cart);
-
-	function DisplayCart(cart){
-
-		var cartString="";
-		cartString +="<h5>This is your cart</h5>";
-		var cartIndex=1;
-
-		for(var x in cart){
-			cartString += "<h6>"+cartIndex+"."+ document.getElementById("title"+x).innerHTML+" Qty: "+cart[x][0]+"</h6>";
-			cartIndex += 1;
-		}
-
-		cartString += "<a href='{% url 'checkout'%}' id='checkout'>Checkout</a>";
-		document.getElementById("cart").setAttribute('data-content',cartString);
-		$('[data-toggle="popover"]').popover();
-	}
-
-</script>
 </html>

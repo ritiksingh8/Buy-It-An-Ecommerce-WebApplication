@@ -1,14 +1,14 @@
 {% extends 'shop/base.html'%}
 {% block content %}
-		<div class="row">
-			<div class="col-md-12">	
-				<ul class="list-group" id="item_list">
-				  
-				</ul>
-			</div>	
-		</div>
+		<div class="container">
+			{% for cart_item in cart_items %}
+			  <ul class="list-group mt-4 mb-4">
+			    <li class="list-group-item d-flex justify-content-between align-items-center"><strong>{{ cart_item.product.title }}</strong><span class="">$ {{ cart_item.product.price }} x {{ cart_item.quantity }}</span></li>
+			  </ul>
+	  		{% endfor %}
+	  	</div>
 
-		<div class="row">
+		<div class="row ml-3">
 			<div class="col-md-12">
 				<form method="POST">
 				  {% csrf_token %}
@@ -42,42 +42,13 @@
 				    </div>
 				    <div class="form-group col-md-2">
 				      <label for="inputZip">Price</label>
-				      <input readonly="" type="text" class="form-control" id="total" name="total">
+				      <input readonly="" type="text" class="form-control" id="total" name="total" value="{{ total }}">
 				    </div>
 				  </div>
 				  <button type="submit" class="btn btn-primary">Place Order</button>
 				</form>
 			</div>
 		</div>
-	</div>	
-	<script type="text/javascript">
-
-		if(localStorage.getItem('cart')==null){
-			var cart={};
-		}
-		else{
-			cart=JSON.parse(localStorage.getItem('cart'));
-		}
-		let total = 0;
-
-		for(item in cart){
-
-			let name = cart[item][1];
-			let quantity = cart[item][0];
-			let price = cart[item][2];
-			total += price
-
-			itemString = `<li class="list-group-item">${name} <span class="">${quantity} - </span> <span class="badge badge-warning badge-pill">${price}</span></li>`
-			$('#item_list').append(itemString);
-
-		}
-
-		totalPrice = `<li class="list-group-item d-flex justify-content-between align-items-center"><b>Your total </b>${total}</li>`
-
-		$("#total").val(total);
-		$('#item_list').append(totalPrice);
-		$('#items').val(JSON.stringify(cart));
-		
-	</script>	
+	</div>		
 
 {% endblock %}
